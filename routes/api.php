@@ -3,6 +3,7 @@
 use App\Http\Controllers\Api\Authentication\AuthorizationController;
 use App\Http\Controllers\Api\Authentication\RegistrationController;
 use App\Http\Controllers\Api\CategoryController;
+use App\Http\Controllers\Api\ProductController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -22,5 +23,10 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 Route::post('/registration', [RegistrationController::class, 'registration']);
 Route::post('/login', [AuthorizationController::class, 'login']);
+
 Route::post('/category/create', [CategoryController::class, 'create']);
 Route::post('/category/update', [CategoryController::class, 'update']);
+Route::post('/category/delete', [CategoryController::class, 'delete']);
+Route::get('/category/list', [CategoryController::class, 'list']);
+
+Route::post('/product/create', [ProductController::class, 'create']);

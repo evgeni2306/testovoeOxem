@@ -32,7 +32,7 @@ class CategoryController extends Controller
         return response()->json($category->id, 200, ['Content-Type' => 'string']);
     }
 
-    public function update(Request $request):JsonResponse
+    public function update(Request $request): JsonResponse
     {
         $fields = $request->all();
         $validator = Validator::make($fields, [
@@ -51,8 +51,24 @@ class CategoryController extends Controller
         return response()->json(['message' => 'updated'], 200, ['Content-Type' => 'string']);
     }
 
-    public function delete(Request $request)
+    public function delete(Request $request):JsonResponse
     {
+        $fields = $request->all();
+        $validator = Validator::make($fields, [
+            'authKey' => 'required|string|exists:users,key',
+            'external_id' => 'required|string|exists:categories,external_id',
+        ]);
 
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 404, ['Content-Type' => 'string']);
+        }
+        Category::deleteWithDependencies($fields['external_id']);
+        return response()->json(['message' => 'deleted'], 200, ['Content-Type' => 'string']);
+    }
+
+    public function list()
+    {
+        $categoris = Category::all();
+        return response()->json($categoris, 200, ['Content-Type' => 'string']);
     }
 }
