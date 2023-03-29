@@ -15,7 +15,7 @@ return new class extends Migration {
             $table->string('name', 255)->nullable(false);
             $table->string('description', 255)->nullable(false);
             $table->decimal('price')->nullable(false);
-            $table->integer('count')->nullable(false);
+            $table->integer('quantity')->nullable(false);
             $table->string('external_id')->nullable(false)->unique();
             $table->timestamps();
         });
