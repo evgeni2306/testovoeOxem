@@ -13,6 +13,7 @@ class Product extends Model
         'description',
         'price',
         'quantity',
-        'external',
+        'external_id'
+
     ];
 }

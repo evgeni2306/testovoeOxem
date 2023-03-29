@@ -12,9 +12,9 @@ class RegistrationController extends Controller
     public function registration(Request $request): \Illuminate\Http\JsonResponse
     {
         $validator = Validator::make($request->all(), [
-            'name' => 'required|string|max:255',
-            'surname' => 'required|string|max:255',
-            'email' => 'required|string|max:255|email|unique:users,email',
+            'name' => 'required|string|max:200',
+            'surname' => 'required|string|max:200',
+            'email' => 'required|string|max:200|email|unique:users,email',
             'password' => 'required|string',
         ]);
 

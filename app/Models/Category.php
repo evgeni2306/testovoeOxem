@@ -11,6 +11,7 @@ class Category extends Model
     protected $fillable = [
         'name',
         'external',
-        'parent_id'
+        'parent_id',
+        'external_id'
     ];
 }
