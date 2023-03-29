@@ -18,7 +18,7 @@ class Product extends Model
         'external_id'
 
     ];
-    protected $hidden=[
+    protected $hidden = [
         'id',
         'updated_at'
     ];
@@ -28,10 +28,18 @@ class Product extends Model
         return self::query()->where('external_id', '=', $externalId)->first();
     }
 
-    static function connectToCategories(int $productId, array $categories):void
+    static function connectToCategories(int $productId, array $categories): void
     {
-        foreach ($categories as $item){
-            ProductCategory::query()->create(['product_id'=>$productId,'category_id'=>$item]);
+        foreach ($categories as $item) {
+            ProductCategory::query()->create(['product_id' => $productId, 'category_id' => $item]);
         }
     }
+
+    static function deleteWithDependencies(string $externalId): void
+    {
+        $product = self::findByExternal($externalId);
+        ProductCategory::query()->where('product_id', '=', $product->id)->delete();
+        $product->delete();
+    }
+
 }

@@ -24,11 +24,7 @@ class CategoryController extends Controller
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->first()], 404, ['Content-Type' => 'string']);
         }
-        $category = Category::query()->create(['name' => $fields['name'], 'external_id' => $fields['external_id']]);
-        if (isset($fields['parent_id'])) {
-            $category->parent_id = $fields['parent_id'];
-            $category->save();
-        }
+        $category = Category::query()->create($fields);
         return response()->json($category->id, 200, ['Content-Type' => 'string']);
     }
 
@@ -66,7 +62,7 @@ class CategoryController extends Controller
         return response()->json(['message' => 'deleted'], 200, ['Content-Type' => 'string']);
     }
 
-    public function list()
+    public function list():JsonResponse
     {
         $categoris = Category::all();
         return response()->json($categoris, 200, ['Content-Type' => 'string']);
