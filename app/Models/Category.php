@@ -16,7 +16,7 @@ class Category extends Model
         'parent_id',
         'external_id'
     ];
-    protected $hidden=[
+    protected $hidden = [
         'id',
         'updated_at'
     ];
@@ -26,11 +26,16 @@ class Category extends Model
         return self::query()->where('external_id', '=', $externalId)->first();
     }
 
-    static function deleteWithDependencies(string $externalId):void
+    static function deleteWithDependencies(string $externalId): void
     {
         $category = self::findByExternal($externalId);
-        ProductCategory::query()->where('category_id','=',$category->id)->delete();
+        ProductCategory::query()->where('category_id', '=', $category->id)->delete();
         $category->delete();
+    }
+
+    public function products(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Product::class, 'product_categories', 'category_id', 'product_id');
     }
 
 }

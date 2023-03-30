@@ -47,7 +47,7 @@ class CategoryController extends Controller
         return response()->json(['message' => 'updated'], 200, ['Content-Type' => 'string']);
     }
 
-    public function delete(Request $request):JsonResponse
+    public function delete(Request $request): JsonResponse
     {
         $fields = $request->all();
         $validator = Validator::make($fields, [
@@ -62,7 +62,7 @@ class CategoryController extends Controller
         return response()->json(['message' => 'deleted'], 200, ['Content-Type' => 'string']);
     }
 
-    public function list():JsonResponse
+    public function list(): JsonResponse
     {
         $categoris = Category::all();
         return response()->json($categoris, 200, ['Content-Type' => 'string']);

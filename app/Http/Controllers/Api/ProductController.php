@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace App\Http\Controllers\Api;
 
 use App\Models\Category;
@@ -16,13 +17,13 @@ class ProductController extends Controller
         $fields = $request->all();
         $validator = Validator::make($fields, [
             'name' => 'required|string|max:200',
-            'description'=>'string|max:1000',
+            'description' => 'string|max:1000',
             'authKey' => 'required|string|exists:users,key',
             'external_id' => 'required|string|unique:products,external_id',
             'price' => 'required|numeric|gt:0',
-            'quantity'=>'required|integer',
-            'category_id'=>'array',
-            'category_id.*'=>'integer|exists:categories,id'
+            'quantity' => 'required|integer',
+            'category_id' => 'array',
+            'category_id.*' => 'integer|exists:categories,id'
         ]);
 
         if ($validator->fails()) {
@@ -33,18 +34,18 @@ class ProductController extends Controller
         return response()->json($product->id, 200, ['Content-Type' => 'string']);
     }
 
-    public function update(Request $request):JsonResponse
+    public function update(Request $request): JsonResponse
     {
         $fields = $request->all();
         $validator = Validator::make($fields, [
             'name' => 'required|string|max:200',
-            'description'=>'string|max:1000',
+            'description' => 'string|max:1000',
             'authKey' => 'required|string|exists:users,key',
             'external_id' => 'required|string|exists:products,external_id',
             'price' => 'required|numeric|gt:0',
-            'quantity'=>'required|integer',
-            'category_id'=>'array',
-            'category_id.*'=>'integer|exists:categories,id'
+            'quantity' => 'required|integer',
+            'category_id' => 'array',
+            'category_id.*' => 'integer|exists:categories,id'
         ]);
 
         if ($validator->fails()) {
@@ -55,7 +56,8 @@ class ProductController extends Controller
         $product->update($fields);
         return response()->json(['message' => 'updated'], 200, ['Content-Type' => 'string']);
     }
-    public function delete(Request $request):JsonResponse
+
+    public function delete(Request $request): JsonResponse
     {
         $fields = $request->all();
         $validator = Validator::make($fields, [
@@ -68,5 +70,28 @@ class ProductController extends Controller
         }
         Product::deleteWithDependencies($fields['external_id']);
         return response()->json(['message' => 'deleted'], 200, ['Content-Type' => 'string']);
+    }
+
+    public function concrete(Request $request)
+    {
+        $fields = $request->all();
+        $validator = Validator::make($fields, [
+            'external_id' => 'required|string|exists:products,external_id',
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 404, ['Content-Type' => 'string']);
+        }
+        $product = Product::findByExternal($fields['external_id']);
+        $product->categories = $product->categories;
+        return response()->json($product, 200, ['Content-Type' => 'string']);
+    }
+
+    public function test()
+    {
+        $product = Product::query()->first();
+        $product->categories = $product->categories;
+
+        dd($product);
     }
 }

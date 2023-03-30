@@ -1,5 +1,6 @@
 <?php
 declare(strict_types=1);
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,5 +13,10 @@ class ProductCategory extends Model
     protected $fillable = [
         'product_id',
         'category_id'
+    ];
+    protected $hidden = [
+        'id',
+        'created_at',
+        'updated_at'
     ];
 }

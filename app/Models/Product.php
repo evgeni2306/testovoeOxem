@@ -20,8 +20,10 @@ class Product extends Model
     ];
     protected $hidden = [
         'id',
-        'updated_at'
+        'updated_at',
+        'categories'
     ];
+
 
     static function findByExternal(string $externalId): Model
     {
@@ -40,6 +42,12 @@ class Product extends Model
         $product = self::findByExternal($externalId);
         ProductCategory::query()->where('product_id', '=', $product->id)->delete();
         $product->delete();
+    }
+
+    public function categories(): \Illuminate\Database\Eloquent\Relations\BelongsToMany
+    {
+        return $this->belongsToMany(Category::class, 'product_categories',
+            'product_id', 'category_id');
     }
 
 }
