@@ -15,7 +15,7 @@ class Product extends Model
         'description',
         'price',
         'quantity',
-        'external_id'
+        'external_id',
 
     ];
     protected $hidden = [
@@ -48,6 +48,18 @@ class Product extends Model
     {
         return $this->belongsToMany(Category::class, 'product_categories',
             'product_id', 'category_id');
+    }
+
+    static function getByCategory(string $categoryExternal): array
+    {
+        $category = Category::findByExternal($categoryExternal);
+        $products = Product::query()->join('product_categories', 'product_id','=', 'products.id')
+            ->select('products.id','name','description','price','quantity','external_id','products.created_at')
+            ->where('category_id', '=', $category->id)->get()->all();
+        foreach ($products as $item){
+            $item->categories = $item->categories;
+        }
+        return $products;
     }
 
 }

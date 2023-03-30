@@ -72,7 +72,7 @@ class ProductController extends Controller
         return response()->json(['message' => 'deleted'], 200, ['Content-Type' => 'string']);
     }
 
-    public function concrete(Request $request)
+    public function concrete(Request $request): JsonResponse
     {
         $fields = $request->all();
         $validator = Validator::make($fields, [
@@ -87,11 +87,25 @@ class ProductController extends Controller
         return response()->json($product, 200, ['Content-Type' => 'string']);
     }
 
-    public function test()
+    public function getByCategory(Request $request)
     {
-        $product = Product::query()->first();
-        $product->categories = $product->categories;
+        $fields = $request->all();
+        $validator = Validator::make($fields, [
+            'external_id' => 'required|string|exists:categories,external_id',
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 404, ['Content-Type' => 'string']);
+        }
+        $products = Product::getByCategory($fields['external_id']);
+        return response()->json($products, 200, ['Content-Type' => 'string']);
 
-        dd($product);
     }
+
+//    public function test()
+//    {
+//
+//        dd($products);
+//    }
+
+
 }

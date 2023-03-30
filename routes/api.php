@@ -33,4 +33,5 @@ Route::post('/product/create', [ProductController::class, 'create']);
 Route::post('/product/update', [ProductController::class, 'update']);
 Route::post('/product/delete', [ProductController::class, 'delete']);
 Route::post('/product/concrete', [ProductController::class, 'concrete']);
+Route::post('/product/category', [ProductController::class, 'getByCategory']);
 Route::get('/product/test', [ProductController::class, 'test']);
