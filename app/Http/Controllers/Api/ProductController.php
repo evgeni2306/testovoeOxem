@@ -19,7 +19,7 @@ class ProductController extends Controller
             'description'=>'string|max:1000',
             'authKey' => 'required|string|exists:users,key',
             'external_id' => 'required|string|unique:products,external_id',
-            'price' => 'required|numeric|between:0,99.99',
+            'price' => 'required|numeric|gt:0',
             'quantity'=>'required|integer',
             'category_id'=>'array',
             'category_id.*'=>'integer|exists:categories,id'
@@ -37,18 +37,22 @@ class ProductController extends Controller
     {
         $fields = $request->all();
         $validator = Validator::make($fields, [
-            'name' => 'required|string|max:200|unique:categories,name',
+            'name' => 'required|string|max:200',
+            'description'=>'string|max:1000',
             'authKey' => 'required|string|exists:users,key',
             'external_id' => 'required|string|exists:products,external_id',
-            'parent_id' => 'integer|exists:categories,id',
+            'price' => 'required|numeric|gt:0',
+            'quantity'=>'required|integer',
+            'category_id'=>'array',
+            'category_id.*'=>'integer|exists:categories,id'
         ]);
 
         if ($validator->fails()) {
             return response()->json(['message' => $validator->errors()->first()], 404, ['Content-Type' => 'string']);
         }
 
-        $category = Category::findByExternal($fields['external_id']);
-        $category->update($fields);
+        $product = Product::findByExternal($fields['external_id']);
+        $product->update($fields);
         return response()->json(['message' => 'updated'], 200, ['Content-Type' => 'string']);
     }
     public function delete(Request $request):JsonResponse
