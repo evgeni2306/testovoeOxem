@@ -101,11 +101,20 @@ class ProductController extends Controller
 
     }
 
-//    public function test()
-//    {
-//
-//        dd($products);
-//    }
+    public function list(Request $request): JsonResponse
+    {
+        $fields = $request->all();
+        $validator = Validator::make($fields, [
+            'page' => 'integer|gt:0',
+            'sort' => 'string|ends_with:sortBy,sortByDesc',
+            'field' => 'string|ends_with:price,created_at'
+        ]);
+        if ($validator->fails()) {
+            return response()->json(['message' => $validator->errors()->first()], 404, ['Content-Type' => 'string']);
+        }
+        $products = Product::paginationWithSort($fields);
+        return response()->json($products, 200, ['Content-Type' => 'string']);
+    }
 
 
 }

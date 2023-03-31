@@ -19,8 +19,6 @@ class Product extends Model
 
     ];
     protected $hidden = [
-        'id',
-        'updated_at',
         'categories'
     ];
 
@@ -53,11 +51,28 @@ class Product extends Model
     static function getByCategory(string $categoryExternal): array
     {
         $category = Category::findByExternal($categoryExternal);
-        $products = Product::query()->join('product_categories', 'product_id','=', 'products.id')
-            ->select('products.id','name','description','price','quantity','external_id','products.created_at')
+        $products = Product::query()->join('product_categories', 'product_id', '=', 'products.id')
+            ->select('products.id', 'name', 'description', 'price', 'quantity', 'external_id', 'products.created_at')
             ->where('category_id', '=', $category->id)->get()->all();
-        foreach ($products as $item){
+        foreach ($products as $item) {
             $item->categories = $item->categories;
+        }
+        return $products;
+    }
+
+    static function paginationWithSort($fields): \Illuminate\Contracts\Pagination\LengthAwarePaginator
+    {
+        $products = Product::query()->paginate(50);
+        if (isset($fields['sort'])) {
+            if ($fields['sort'] === 'sortBy') {
+                $sortedResult = $products->getCollection()->sortBy($fields['field'])->values();
+                $products->setCollection($sortedResult);
+            } elseif ($fields['sort'] === 'sortByDesc') {
+                $sortedResult = $products->getCollection()->sortByDesc($fields['field'])->values();
+                $products->setCollection($sortedResult);
+            } else {
+                return $products;
+            }
         }
         return $products;
     }
