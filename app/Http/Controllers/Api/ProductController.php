@@ -8,7 +8,9 @@ use App\Models\Product;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
+use function League\Flysystem\toArray;
 
 class ProductController extends Controller
 {
@@ -87,7 +89,7 @@ class ProductController extends Controller
         return response()->json($product, 200, ['Content-Type' => 'string']);
     }
 
-    public function getByCategory(Request $request)
+    public function getByCategory(Request $request): JsonResponse
     {
         $fields = $request->all();
         $validator = Validator::make($fields, [
@@ -115,6 +117,4 @@ class ProductController extends Controller
         $products = Product::paginationWithSort($fields);
         return response()->json($products, 200, ['Content-Type' => 'string']);
     }
-
-
 }

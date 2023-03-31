@@ -36,4 +36,3 @@ Route::post('/product/concrete', [ProductController::class, 'concrete']);
 Route::post('/product/category', [ProductController::class, 'getByCategory']);
 Route::get('/product/list', [ProductController::class, 'list']);
 
-Route::get('/product/test', [ProductController::class, 'test']);
