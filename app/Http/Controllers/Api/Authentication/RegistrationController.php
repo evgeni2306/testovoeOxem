@@ -27,6 +27,6 @@ class RegistrationController extends Controller
         $fields = $request->all();
         $fields['key'] = time();
         $user = User::query()->create($fields);
-        return response()->json(['key' => $user['key']], 200, ['Content-Type' => 'string']);
+        return response()->json(['authKey' => $user['key']], 200, ['Content-Type' => 'string']);
     }
 }
